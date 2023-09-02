@@ -2,10 +2,15 @@ import requests
 import json
 import inquirer
 import pickledb
+from web3 import Account
+from zklink_sdk import ZkLinkLibrary, ZkLinkSigner
+from zklink_sdk.types import Order, Token
 
 params = {}
+private_key = pickledb.load('key.db', False).get("private_key")
+l2userId = pickledb.load('account.db', False).get("l2userId")
 
-jwt = input("Please input the JWT token which can be obtained in step 5: ")
+jwt = pickledb.load('jwt.db', False).get("jwt")
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36",
@@ -54,9 +59,9 @@ options = [
 side = inquirer.prompt(options).get("option")
 
 # ordinary inputs
-price = input("Please input the price of buying/selling: ") # *???
+price = str(int(float(input("Please input the price of buying/selling: ")) * (10 ** 18)))
 
-size = input("Please input the size of buying/selling: ") # *???
+size = str(int(float((input("Please input the size of buying/selling: "))) * (10 ** 18)))
 
 # user select time in force
 options = [
@@ -68,34 +73,47 @@ options = [
 timeInForce = inquirer.prompt(options).get("option")
 
 
+account = Account.from_key(private_key)
+zksigner = ZkLinkSigner.from_account(account, ZkLinkLibrary())
+pubkey_hex = zksigner.public_key.hex()
+
+print(int(baseTokenId))
+order = Order(
+        account_id=l2userId,
+        price=int(price),
+        amount=int(size),
+        sub_account_id=1,
+        slot=int(slot),
+        nonce=int(nonce),
+        base_token=Token(id=int(baseTokenId), chain_id=0, address='', symbol='', decimals=18),
+        quote_token=Token(id=int(quoteTokenId), chain_id=0, address='', symbol='', decimals=18),
+        is_sell=0 if side == "buy" else 1,
+        taker_fee_ratio=255,
+        maker_fee_ratio=255
+    )
+order_signature_hex = zksigner.sign_order(order).signature
+
+print("Your order preview:")
+print(order)
+
 # construct the post body
 body = {
   "productId": productId,
   "side": side,
-  "type": "limit",   # what else? other type may trigger a different input flow
+  "type": "limit",
   "price": price,
   "size": size,
-  "funds": "70000000",  # what does this mean?                     
-  "l2UserId": 2,                  # layer2上的用户id, should be hard coded
+  "funds": str(int(price) * int(size) / (10 ** 18)),                  
+  "l2UserId": l2userId,
   "slot": int(slot),
   "nonce": int(nonce),
-  "l2baseCurrencyId": int(baseTokenId),             # layer2交易对base资产id
-  "l2quoteCurrencyId": int(quoteTokenId),            # layer2交易对quote资产id
-  "makerFeeRatio": 5,                # maker交易手续费费率, 单位   万分之一, should be hard coded
-  "takerFeeRatio": 10,               # taker交易手续费费率, 单位   万分之一, should be hard coded
-  "validFrom": 1000000,              # no clue
-  "validUntil": 1000000,             # no clue
-  "pubkey": "0dd4f603531bd78bbecd005d9e7cc62a794dcfadceffe03e269fbb6b72e9c724",   # 用户的layer2 pubkey, should be hard coded
-  "signature": "6f7538765f174de449b3e618bf1fe94714638a4cd8d35fecdc42e34860a291a5f470e2cdd2fbf196c3a6953fecb15b093c86b6e00c412522a6ff399c211b8503", # how to get this?
-  "timeInForce": timeInForce,               # GTC: 订单会一直有效, 直到被成交或者取消     IOC: 无法立即成交的部分就撤销     GTX:  只挂单提供流动性不成交，如果失败的话则撤销挂单
-  "isStop": 1,                        # 是否stop limit单, no clue
-  "stopCondition": "gt",              # stop limit 挂单匹配条件   gt 大于  ge 大于等于  lt小于  le小于等于, no clue
-  "stopPrice": "100000000",            # stop limit 挂单匹配价格, no clue
-  "isIceberg": 1,                     # 是否冰山单, no clue
-  "exposedSize": "80000000000000000"    # 冰山单可见委托大小, no clue
+  "l2baseCurrencyId": int(baseTokenId),             # layer2 base token id
+  "l2quoteCurrencyId": int(quoteTokenId),            # layer2 quote token id
+  "makerFeeRatio": 255,                # maker fee ratio, should be hard coded
+  "takerFeeRatio": 255,               # taker fee ratio, should be hard coded
+  "pubkey": pubkey_hex[2:] if pubkey_hex[0:2] == "0x" else pubkey_hex,
+  "signature": order_signature_hex[2:] if order_signature_hex[0:2] == "0x" else order_signature_hex
 }
-
-print(body)
 
 response = requests.post(
     "https://aws-test-1.zkex.com/api-v1/api/orders",

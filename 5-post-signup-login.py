@@ -1,13 +1,25 @@
 import requests
 import json
+import pickledb
+from zklink_sdk import EthereumSignerWeb3
+from web3 import Account
+# from zklink_sdk.ethereum_signer import ZkLinkLibrary, ZkLinkSigner
+# from zklink_sdk.types import Order, Token
 
 params = {}
+private_key = pickledb.load('key.db', False).get("private_key")
+address = pickledb.load('account.db', False).get("address")
+
+msg = "Access Login"
+account = Account.from_key(private_key)
+ethereum_signer = EthereumSignerWeb3(account=account)
+signature = ethereum_signer.sign(msg.encode()).signature
 
 body = {
   "verifyType": 0,
-  "address": "0x3498F456645270eE003441df82C718b56c0e6666",
+  "address": address,
   "message": "Access Login",
-  "signature": "0x1d5b31445b992a87b3f13bf686a48da291d2f332ae173b8948efbff2466824cd2a860eca1c22f45e63d819353b23fcdcae0195fd64b8e0308b629fd41f54bcf91b"
+  "signature": signature
 }
 
 headers = {
@@ -21,6 +33,10 @@ response = requests.post(
     data = json.dumps(body),
     headers = headers
 )
+
+db = pickledb.load("jwt.db", False)
+db.set("jwt", response.headers.get("Access-Token"))
+db.dump()
 
 print("Sending request to:")
 
@@ -37,12 +53,6 @@ print("Getting response:")
 print("<<<<<<<<<<<<<<<<<<<")
 
 print(response.text)
-
-print()
-
-print("Returned with headers:")
-
-print(response.headers)
 
 print("<<<<<<<<<<<<<<<<<<<")
 

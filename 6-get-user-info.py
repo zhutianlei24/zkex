@@ -1,8 +1,10 @@
 import requests
+import pickledb
+import json
 
 params = {}
 
-jwt = input("Please input the JWT token which can be obtained in step 5: ")
+jwt = pickledb.load('jwt.db', False).get("jwt")
 
 # So here we need to attach the jwt token which we obtained from step 5 to the request headers,
 headers = {
@@ -16,6 +18,10 @@ response = requests.get(
     params = params, 
     headers = headers
 )
+
+db = pickledb.load("account.db", False)
+db.set("l2userId", json.loads(response.text).get("l2userId"))
+db.dump()
 
 print("Sending request to:")
 
