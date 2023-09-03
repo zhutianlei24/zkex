@@ -1,4 +1,3 @@
-#IMPORTANT: Get Account Subnonce means get the sub account's nonce, this nonce will be used for Withdraw, Transfer, ForcedExit and OrderMatching
 import requests
 import pickledb
 
@@ -11,7 +10,7 @@ headers = {
 }
 
 response = requests.get(
-    "https://aws-test-1.zkex.com/api-v1/api/layer2/users/subNonce",
+    "https://aws-test-1.zkex.com/api-v1/api/feeRate",
     headers = headers
 )
 
@@ -39,7 +38,7 @@ print("See more docs here:")
 
 print("===================")
 
-print("https://github.com/ZKEX/orderbook-apis#l2accountsubnonce")
+print("https://github.com/ZKEX/orderbook-apis#getUserFeerate")
 
 print("===================")
 
