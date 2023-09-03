@@ -8,8 +8,7 @@ jwt = pickledb.load('jwt.db', False).get("jwt")
 # So here we need to attach the jwt token which we obtained from step 5 to the request headers,
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36",
-    "Access-Token": jwt
-    
+    "Access-Token": jwt   
 }
 
 response = requests.get(

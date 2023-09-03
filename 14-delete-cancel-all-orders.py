@@ -1,6 +1,5 @@
 import requests
 import pickledb
-import json
 
 params = {}
 
@@ -12,15 +11,11 @@ headers = {
     "Access-Token": jwt 
 }
 
-response = requests.get(
-    "https://aws-test-1.zkex.com/api-v1/api/users/self",
+response = requests.delete(
+    "https://aws-test-1.zkex.com/api-v1/api/orders",
     params = params, 
     headers = headers
 )
-
-db = pickledb.load("account.db", False)
-db.set("l2userId", json.loads(response.text).get("l2userId"))
-db.dump()
 
 print("Sending request to:")
 
@@ -46,7 +41,7 @@ print("See more docs here:")
 
 print("===================")
 
-print("https://github.com/ZKEX/orderbook-apis#getselfinfo")
+print("https://github.com/ZKEX/orderbook-apis#cancelorders")
 
 print("===================")
 
