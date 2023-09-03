@@ -2,41 +2,42 @@ import requests
 import pickledb
 import inquirer
 
-params = {}
 jwt = pickledb.load('jwt.db', False).get("jwt")
-tokenId = input("Please input the token id: ")
-chainId = ""
+params: {}
+
+baseTokenId = input("Please input the base token id: ")
+quoteTokenId = input("Please input the quote token id: ")
 options = [
       inquirer.List("option",
-                     message="Select an product: ",
-                    choices=["transfer", "withdraw", "changepubkey"],
+                     message="You want to query for ",
+                    choices=["base token", "quote token"],
           ),
 ]
-txType = inquirer.prompt(options).get("option")
-
-if (txType != "transfer"):
-    chainId = input("For withdraw and changepubkey transaction please also insert chainId: ")
+tokenType = inquirer.prompt(options).get("option")
+amount = str(int(input("With amount: ")) * 10 ** 18)
+if (tokenType == "base token"):
     params = {
-    "tokenId": tokenId,
-    "chainId": chainId,
-    "txType": 3 if txType == "withdraw" else 6
-    }  
+        "baseTokenId": baseTokenId,
+        "quoteTokenId": quoteTokenId,
+        "baseExchange": amount
+    }
 else:
     params = {
-    "tokenId": tokenId,
-    "txType": 4
-    }  
+        "baseTokenId": baseTokenId,
+        "quoteTokenId": quoteTokenId,
+        "quoteExchange": amount
+    }
 
 # So here we need to attach the jwt token which we obtained from step 5 to the request headers,
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36",
-    "Access-Token": jwt,
+    "Access-Token": jwt  
 }
 
 response = requests.get(
-    "https://aws-test-1.zkex.com/api-v1/api/layer2/estimateTxFee",
+    "https://aws-test-1.zkex.com/api-v1/api/flashExchange/askPrice",
     headers = headers,
-    params = params
+    params =  params
 )
 
 print("Sending request to:")
@@ -63,7 +64,7 @@ print("See more docs here:")
 
 print("===================")
 
-print("https://github.com/ZKEX/orderbook-apis#l2EstimateTxFee")
+print("https://github.com/ZKEX/orderbook-apis#askprice")
 
 print("===================")
 
