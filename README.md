@@ -66,3 +66,35 @@ Get the trade history of your account (with pagniation).
 Query your next available slot.
 ## Post Place Order
 Place an order with your account. For ```timeInForce``` please select GTC, the other options are not tested yet. Once your order is made, you can view it in ```testnet.app.zkex.com```.
+## Delete Cancel Order [Optional]
+Cancel an order by its order id.
+## Delete Cancel All Orders [Optional]
+Cancel all orders that you have been made.
+## Get Products Trades [Optional]
+todo
+## Get Product Candles [Optional]
+todo
+## Get Products Candles [Optional]
+todo
+## Get Account [Optional]
+Get all tokens that your account currently holds.
+## Get Account Stats [Optional]
+Get your account's history holding info.
+## Get Account PNL Stat [Optional]
+Get your account's Profit and Loss history info.
+## Get Layer 2 Account Info [Optional]
+Get your account's layer 2 (on zklink) info
+## Get Layer 2 Account Nonce [Optional]
+Get your account's layer 2 (on zklink) nonce, this is the nonce of your main account
+## Get Layer 2 Account Subnonce [Optional]
+Get your account's layer 2 (on zklink) subnonce, this is the nonce of your sub account
+## Get User Fee Rate [Optional]
+Get your account's fee rate.
+## Get Layer 2 Estimated Transaction Fee [Optional]
+Get the estimated fee for a certain type of transacation.
+## Post Submit Transaction [Optional]
+Post the layer 2 transaction to this endpoint so that it helps you to forward it to zklink rpc provider.
+## Get The Flash Exchange price [Optional]
+Query for the flash exchange price. Note: the buy/sell/token/amount will have an impact on the final trading price, and this ordermatching will not go through normal order placing/taking process -> flash trade is not visible on the UI.
+## Post Place Flash Order [Optional]
+Post an order by using flash exchange. Note: the flash order placing only supports "sell". If you want to perform a "buy" option, you need to do it reversly. For example, if you want to buy wETH with USD, actually you need to sell USD for wETH. Somehow in this script, the "sell USD and get wETH" returns 500 back.

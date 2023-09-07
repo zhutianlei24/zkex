@@ -9,12 +9,14 @@ baseTokenId = input("Please input the base token id: ")
 quoteTokenId = input("Please input the quote token id: ")
 options = [
       inquirer.List("option",
-                     message="You want to query for ",
+                     message="You want to query for: ",
                     choices=["base token", "quote token"],
           ),
 ]
 tokenType = inquirer.prompt(options).get("option")
-amount = str(int(input("With amount: ")) * 10 ** 18)
+# amount = str(int(input("With amount: ")) * 10 ** 18)
+amount = str(int(float(input("Please input the size of buying/selling: ")) * (10 ** 18)))
+
 if (tokenType == "base token"):
     params = {
         "baseTokenId": baseTokenId,
