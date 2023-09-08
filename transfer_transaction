@@ -1,0 +1,30 @@
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "sendTransaction",
+    "params": [
+        {
+             "accountId": 14721,
+             "fromSubAccountId": 1,
+             "toSubAccountId": 1,
+             "from": "0x18C86896adE5841E2c81e5BcaFBF83B1c8d34281",
+             "to": "0xdf705349D44903d7932026811Af8F256c2453228",
+             "tokenId": 141,
+             "amount": "10000000000000000",
+             "fee": "3000000000000000",
+             "nonce": 12,
+             "ts": 1694093962,
+             "type": "Transfer",
+             "token": 141,
+             "signature": {
+                 "pubkey": "639605a1cf9e79f19eb143aa7a4e7a9308346e76f497cfed8a94ff5627d7882c",
+                 "signature": "2dcda5800e6706f1b56da47cd68c01fd2ccb0e2ac5cc9c176913c9b920e68f96b7cbf3e08191473605e70acd9f8829e15cfdbd200271035ec5676b408e3ed102"
+             }
+        },
+        {
+            "type": "EthereumSignature",
+            "signature": "0x2ac9f75ef8563aa9f7a7d002b77513814fdf4b505c8f093804868e4124b2455d7699957ef32d95af7fec1d1524f9937def86d242cc7d8900947b8b634c1a72f31c"
+        },
+        null
+    ]
+}
