@@ -21,7 +21,7 @@ zk_data = Transfer(
   token = token,
   amount = 10000000000000000,
   fee = 3000000000000000,
-  nonce = 12,
+  nonce = 0,
   timestamp = 1694093962
 )
 zk_signature = zksigner.sign_tx(zk_data).signature
@@ -30,7 +30,8 @@ print(zk_signature)
 print("the pubkey hex is:")
 print(pubkey_hex)
 
-eth_data = "Transfer 0.1 wETH to: 0xdf705349D44903d7932026811Af8F256c2453228\nFee: 0.003 wETH\nNonce: 12"
+eth_data = "Transfer 0.01 wETH to: 0xdf705349d44903d7932026811af8f256c2453228\nFee: 0.003 wETH\nNonce: 0"
+
 eth_signature = ethereum_signer.sign(eth_data.encode()).signature
 print("the eth signature is:")
 print(eth_signature)
