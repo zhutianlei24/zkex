@@ -51,7 +51,7 @@ zk_data = Transfer(
   amount = 10000000000000000, # we want to transfer 0.01 wETH
   fee = 3000000000000000, # hard coded
   nonce = subnonce,
-  timestamp = 1694235944
+  timestamp = timestamp
 )
 zk_signature = zksigner.sign_tx(zk_data).signature
 print("the zk signature is:")
@@ -80,7 +80,7 @@ payload = {
              "amount": "10000000000000000",
              "fee": "3000000000000000",
              "nonce": subnonce,
-             "ts": 1694235944,
+             "ts": timestamp,
              "type": "Transfer",
              "token": 141,
              "signature": {
